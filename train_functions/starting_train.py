@@ -4,6 +4,7 @@ import torch.optim as optim
 from tqdm import tqdm
 
 
+
 def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
     """
     Trains and evaluates a model.
@@ -38,18 +39,26 @@ def starting_train(train_dataset, val_dataset, model, hyperparameters, n_eval):
         # Loop over each batch in the dataset
         for batch in tqdm(train_loader):
             # TODO: Forward propagate
+            optimizer.zero_grad()
+            inputs, labels = batch
+            inputs=inputs.float()
+            input_x=model(inputs)
+            input_x = input_x.view(inputs.size(0), -1)
+            loss = loss_fn(input_x, labels)
+            loss.backward()
+            optimizer.step()
 
-            # TODO: Backpropagation and gradient descent
-
+        
             # Periodically evaluate our model + log to Tensorboard
             if step % n_eval == 0:
+               
                 # TODO:
                 # Compute training loss and accuracy.
-                # Log the results to Tensorboard.
+                 # Log the results to Tensorboard.
 
                 # TODO:
                 # Compute validation loss and accuracy.
-                # Log the results to Tensorboard. 
+                # Log the results to Tensorboard.
                 # Don't forget to turn off gradient calculations!
                 evaluate(val_loader, model, loss_fn)
 
